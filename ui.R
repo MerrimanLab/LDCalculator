@@ -10,7 +10,7 @@
 
 ## UI.R
 library(shiny)
-setwd("~/Google Drive/OtagoARF/LDCalcInterface")
+setwd("~/Documents/GitHub/LDCalculator")
 
 
 shinyUI(
