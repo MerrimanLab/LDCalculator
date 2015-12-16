@@ -10,6 +10,7 @@
 
 ## UI.R
 library(shiny)
+library(shinyFiles)
 setwd("~/Documents/GitHub/LDCalculator")
 
 
@@ -37,13 +38,27 @@ shinyUI(
           # InputVCFFile    option: -v
           column(4,
                  wellPanel (
-                   fileInput("inputVCFFile", label=h4("VCF File Input"))
+                   shinyFilesButton("inputVCFFile", 
+                                    label=h5("VCF File Input"), 
+                                    title="Please select an input VCF File",
+                                    multiple=FALSE),
+                   br(),
+                   hr(),
+                   p("VCF File:", style="color:#888888;"),
+                   verbatimTextOutput("outputVCFFile")
                  )
           ),
           # InputSNPFile    option: -s
           column(4, 
                  wellPanel (
-                   fileInput("inputSNPFile", label=h4("SNP File Input"))
+                   shinyFilesButton("inputSNPFile", 
+                                    label=h5("SNP File Input"), 
+                                    title="Please select an input SNP File",
+                                    multiple=FALSE),
+                   br(),
+                   hr(),
+                   p("SNP File:", style="color:#888888;"),
+                   verbatimTextOutput("outputSNPFile")
                  )
           ),
           # Individual SNPs    options: -r, -i
