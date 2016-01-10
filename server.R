@@ -25,20 +25,21 @@ outWINDOWFREQ <- ''
 outHAPLOVIEW <- ''
 outPED <- ''
 outMATRIX <- ''
+outCOMMAND <- ''
 
 shinyServer(function(input, output, session) {
   
     ## File Inputs & SNP Include / Exclude
-    ## Simily things, and make users run this from one directory that contains their data files?
+    ## Simplify things, and make users run this from one directory that contains their data files?
     ## then I can simply point to this directory in roots() below.
     
     # inputVCFFile
     shinyFileChoose(input, "inputVCFFile", session=session, roots=DIRECTORIES)
-    output$outputVCFFile <- renderPrint({parseFilePaths(DIRECTORIES, input$inputVCFFile)[1:2]})
+    output$outputVCFFile <- renderPrint({input$inputVCFFile$files$'0'[[2]]})
     
     # inputSNPFile
     shinyFileChoose(input, "inputSNPFile", session=session, roots=DIRECTORIES)
-    output$outputSNPFile <- renderPrint({parseFilePaths(DIRECTORIES, input$inputSNPFile)[1:2]})
+    output$outputSNPFile <- renderPrint({input$inputSNPFile$files$'0'[[2]]})
   
     # textSNPInclude
     outputSNPInclude <- renderText({input$textSNPInclude})
@@ -55,8 +56,36 @@ shinyServer(function(input, output, session) {
     outputPED <- renderText({input$textPED})
     
     ## Output as matrix
-    outputMatrix <- renderText({input$checkMatrix})
+    outputMatrix <- renderText({input$radioMatrix})
     
-    ## OnSubmit
-    
+    ## OnCreate
+    output$outputCommand <- renderText({
+
+          outCOMMAND <<- ''
+          outVCFFILE <<- paste0(input$inputVCFFile$files$'0'[[2]], ',')
+          outSNPFILE <<- paste0(input$inputSNPFile$files$'0'[[2]], ',')
+          outSNPINCLUDE <<- paste0(input$textSNPInclude, ',')
+          outSNPEXCLDUE <<- paste0(input$textSNPExclude, ',')
+          outWINDOWSNPS <<- paste0(input$sliderWindowSNPs, ',')
+          outWINDOWKB <<- paste0(input$sliderWindowKB, ',')
+          outWINDOWFREQ <<- paste0(input$sliderWindowFreq, ',')
+          outHAPLOVIEW <<- paste0(input$textHaploview, ',')
+          outPED <<- paste0(input$textPED, ',')
+          outMATRIX <<- input$radioMatrix
+        
+          outCOMMAND <<- paste0(outVCFFILE,
+                               outSNPFILE,
+                               outSNPINCLUDE,
+                               outSNPEXCLDUE,
+                               outWINDOWSNPS,
+                               outWINDOWKB,
+                               outWINDOWFREQ,
+                               outHAPLOVIEW,
+                               outPED,
+                               outMATRIX)
+          
+          outCOMMAND
+    })
+
 })
+

@@ -111,20 +111,23 @@ shinyUI(
           column(4, textInput("textPED", label=p("PED file output:"))),
                  
           # checkMatrix    option: -m
-          column(4, checkboxGroupInput("checkMatrix", 
-                                        label=p("Output data to matrix"),
-                                       choices = list("No" = 1, "Yes" = 2),
-                                        selected = 1)
+          column(4, radioButtons("radioMatrix", 
+                                  label=p("Output data to matrix"),
+                                  choices = list("No" = 1, "Yes" = 2),
+                                  selected = 1)
           )
         ),
         br(),
         hr(),
         br(),
         
-        # Submit Button
+        # Compile the command string.
         fluidRow(
-          column(4, submitButton(text = h4("Calculate Now")))
+          column(2),
+          column(8, 
+                 wellPanel( verbatimTextOutput("outputCommand")) ),
+          column(2)
         )
-        
+
     )
 )
