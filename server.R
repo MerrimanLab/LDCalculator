@@ -68,8 +68,10 @@ shinyServer(function(input, output, session) {
           outCOMMAND <- 
             "COMMAND -v %s -R %s -s %s -S %s -c %s -w %s -r %s -l %s -m %s -o %s -i %s -O %s -h %s -p %s"
           
-          optVCFFILE <<- input$inputVCFFile$files$'0'[[2]]
-          optSNPFILE <<- input$inputSNPFile$files$'0'[[2]]
+          optVCFFILE <<- if (is.null(input$inputVCFFile$files$'0'[[2]])) '' 
+                         else input$inputVCFFile$files$'0'[[2]]  
+          optSNPFILE <<- if (is.null(input$inputSNPFile$files$'0'[[2]])) '' 
+                         else input$inputSNPFile$files$'0'[[2]] 
           optSNPINCLUDE <<- input$textSNPInclude
           optSNPEXCLDUE <<- input$textSNPExclude
           optWINDOWSNPS <<- input$sliderWindowSNPs
