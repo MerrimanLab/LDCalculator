@@ -15,17 +15,21 @@ setwd("~/Documents/GitHub/LDCalculator")
 
 ## Global variables for final command text
 DIRECTORIES <- c(wd='~/.')
-outVCFFILE <- ''
-outSNPFILE <- ''
-outSNPINCLUDE <- ''
-outSNPEXCLDUE <- ''
-outWINDOWSNPS <- ''
-outWINDOWKB <- ''
-outWINDOWFREQ <- ''
-outHAPLOVIEW <- ''
-outPED <- ''
-outMATRIX <- ''
-outCOMMAND <- ''
+optVCFFILE <- ''
+optSNPFILE <- ''
+optSNPINCLUDE <- ''
+optSNPEXCLDUE <- ''
+optWINDOWSNPS <- ''
+optWINDOWKB <- ''
+optWINDOWFREQ <- ''
+optHAPLOVIEW <- ''
+optPED <- ''
+optMATRIX <- ''
+
+# other control options
+optSNPLISTONLY <- "TRUE"
+optOUTPUTFILE <- sprintf("LDOutput_%s.out", Sys.Date())
+optLOGFILE <- sprintf("LDLogFile_%s.log", Sys.Date())
 
 shinyServer(function(input, output, session) {
   
@@ -61,28 +65,38 @@ shinyServer(function(input, output, session) {
     ## OnCreate
     output$outputCommand <- renderText({
 
-          outCOMMAND <<- ''
-          outVCFFILE <<- paste0(input$inputVCFFile$files$'0'[[2]], ',')
-          outSNPFILE <<- paste0(input$inputSNPFile$files$'0'[[2]], ',')
-          outSNPINCLUDE <<- paste0(input$textSNPInclude, ',')
-          outSNPEXCLDUE <<- paste0(input$textSNPExclude, ',')
-          outWINDOWSNPS <<- paste0(input$sliderWindowSNPs, ',')
-          outWINDOWKB <<- paste0(input$sliderWindowKB, ',')
-          outWINDOWFREQ <<- paste0(input$sliderWindowFreq, ',')
-          outHAPLOVIEW <<- paste0(input$textHaploview, ',')
-          outPED <<- paste0(input$textPED, ',')
-          outMATRIX <<- input$radioMatrix
+          outCOMMAND <- 
+            "COMMAND -v %s -R %s -s %s -S %s -c %s -w %s -r %s -l %s -m %s -o %s -i %s -O %s -h %s -p %s"
+          
+          optVCFFILE <<- input$inputVCFFile$files$'0'[[2]]
+          optSNPFILE <<- input$inputSNPFile$files$'0'[[2]]
+          optSNPINCLUDE <<- input$textSNPInclude
+          optSNPEXCLDUE <<- input$textSNPExclude
+          optWINDOWSNPS <<- input$sliderWindowSNPs
+          optWINDOWKB <<- input$sliderWindowKB
+          optWINDOWFREQ <<- input$sliderWindowFreq
+          optHAPLOVIEW <<- input$textHaploview
+          optPED <<- input$textPED
+          optMATRIX <<- if (input$radioMatrix == 1) 'FALSE'
+                        else 'TRUE'
         
-          outCOMMAND <<- paste0(outVCFFILE,
-                               outSNPFILE,
-                               outSNPINCLUDE,
-                               outSNPEXCLDUE,
-                               outWINDOWSNPS,
-                               outWINDOWKB,
-                               outWINDOWFREQ,
-                               outHAPLOVIEW,
-                               outPED,
-                               outMATRIX)
+          outCOMMAND <- sprintf(
+              outCOMMAND,
+              optVCFFILE,
+              optSNPINCLUDE,
+              optSNPFILE,
+              optSNPLISTONLY,
+              '???',
+              optWINDOWSNPS,
+              optWINDOWFREQ,
+              optWINDOWKB,
+              optMATRIX,
+              optOUTPUTFILE,
+              optSNPEXCLDUE,
+              optLOGFILE,
+              optHAPLOVIEW,
+              optPED
+          )
           
           outCOMMAND
     })
