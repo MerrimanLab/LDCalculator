@@ -58,9 +58,13 @@ whose daughters were all beautiful, but the youngest was so beautiful
               "1000 Genomes",
               mainPanel(
                   fluidRow(
-                      column(4, wellPanel(radioButtons("radio1KG",
+                      column(4, wellPanel(checkboxGroupInput("checkPopulation",
                                                         label = h3("Population"),
-                                                        choices = list("All" = 1, "Wombles" = 2, "Smurfs" = 3, "Snorks" = 4)))),
+                                                        choices = list("All" = 1, 
+                                                                       "Wombles" = 2, 
+                                                                       "Smurfs" = 3, 
+                                                                       "Snorks" = 4),
+                                                        inline = TRUE))),
                       column(8, br(),
                                 p("'Be quiet, and do not weep,' answered the frog, 'I can help you, but what will you give me if I bring your
                                   plaything up again?'"),
@@ -74,21 +78,29 @@ whose daughters were all beautiful, but the youngest was so beautiful
                   br(),
                   fluidRow(
                       column(4, wellPanel(h4("Region", style="text-align: left;"),
+                                          p("Example:  5:10458732-10458740"),
                                           hr(),
-                                          textInput("textRegChr", label = p("Chromosome")),
-                                          textInput("textRegStart", label = p("Start position")),
-                                          textInput("textRegEnd", label = p("End position")))),
-                      column(4, wellPanel(shinyFilesButton("inputSNPFile", 
-                                                           label=h5("SNP File Input"), 
+                                          textInput("textRegChr1KG", label = p("Chromosome (example: 5)")),
+                                          textInput("textRegStart1KG", label = p("Start position (example: 10458732)")),
+                                          textInput("textRegEnd1KG", label = p("End position (example: 10458740)"))))
+                  ),
+                  br(),
+                  hr(),
+                  br(),
+                  fluidRow(
+                      column(4, p("These are optional. Specify a SNP File if there are specific SNPs you would like to include.
+                                  Additionally, you can specify a list of SNPs to include or exclude as required.", style="font-weight: normal;")),
+                      column(4, wellPanel(shinyFilesButton("inputSNPFile1KG", 
+                                                           label=h5("SNP File (optional)"), 
                                                            title="Please select an input SNP File",
                                                            multiple=FALSE),
                                           br(),
                                           hr(),
                                           br(),
                                           p("SNP File:  ", style="text-align: left;"),
-                                          verbatimTextOutput("outSNPFile"))),
-                      column(4, wellPanel (textInput("textSNPInclude", label=p("SNPs to include:")),
-                                           textInput("textSNPExclude", label=p("SNPs to exclude:"))))
+                                          verbatimTextOutput("outSNPFile1KG"))),
+                      column(4, wellPanel (textInput("textSNPInclude1KG", label=p("SNPs to include:")),
+                                           textInput("textSNPExclude1KG", label=p("SNPs to exclude:"))))
                   ),
                   br(),
                   hr(),
@@ -100,16 +112,26 @@ whose daughters were all beautiful, but the youngest was so beautiful
                   br(),
                   br(),
                   fluidRow(
-                      column(4, wellPanel(radioButtons("radioOutputFormat",
+                      column(4, wellPanel(radioButtons("radioOutputFormat1KG",
                                                        label = NULL,
                                                        choices = list("Haploview" = 1, "Pairwise LD" = 2, "Find Proxy SNP" = 3)),
                                           hr(),
-                                          textInput("textOutputFile", label=p("Output File:")))),
-                      column(4, textInput("textProxyWindow", label=p("Window Size"))),
-                      column(4, sliderInput("sliderProxySNPs", 
+                                          textInput("textOutputFile1KG", label=p("Output File: (without file extension eg. MyOutputFile)")))),
+                      column(4, textInput("textProxyWindow1KG", label=p("Window Size"))),
+                      column(4, sliderInput("sliderProxySNP1KG", 
                                             label=p("Include LD greater than:"),
                                             min = 0, max = 1, value = 0.8, step=0.1))
-                  )
+                  ),
+                  br(),
+                  br(),
+                  hr(),
+                  br(),
+                  fluidRow(
+                      column(4, actionButton("actionBtn", "Calculate LD")),
+                      column(8, wellPanel(verbatimTextOutput("outputGLOBALOPTIONS")))
+                  ),
+                  br(),
+                  br()
               )
         ),
         tabPanel(
@@ -125,15 +147,7 @@ whose daughters were all beautiful, but the youngest was so beautiful
                                         br(),
                                         p("VCF File:  ", style="text-align: left;"),
                                         verbatimTextOutput("outVCFFile"))),
-                    column(4, wellPanel(shinyFilesButton("inputSampleFile", 
-                                                         label=h5("Sample File Input"), 
-                                                         title="Please select an input Sample File",
-                                                         multiple=FALSE),
-                                        br(),
-                                        hr(),
-                                        br(),
-                                        p("Sample File:  ", style="text-align: left;"),
-                                        verbatimTextOutput("outSampleFile"))),
+                    
                     column(4, wellPanel(textInput("textSampleExcl", label = p("Exclude the following samples:  "))))
                 ),
                 br(),
@@ -142,20 +156,24 @@ whose daughters were all beautiful, but the youngest was so beautiful
                 fluidRow(
                     column(4, wellPanel(h4("Region", style="text-align: left;"),
                                         hr(),
-                                        textInput("textRegChr", label = p("Chromosome")),
-                                        textInput("textRegStart", label = p("Start position")),
-                                        textInput("textRegEnd", label = p("End position")))),
-                    column(4, wellPanel(shinyFilesButton("inputSNPFile", 
-                                                         label=h5("SNP File Input"), 
+                                        textInput("textRegChrUsr", label = p("Chromosome")),
+                                        textInput("textRegStartUsr", label = p("Start position")),
+                                        textInput("textRegEndUsr", label = p("End position"))))
+                ),
+                fluidRow(
+                    column(4, p("These are optional. Specify a SNP File if there are specific SNPs you would like to include.
+                                  Additionally, you can specify a list of SNPs to include or exclude as required.", style="font-weight: normal;")),
+                    column(4, wellPanel(shinyFilesButton("inputSNPFileUsr", 
+                                                         label=h5("SNP File (optional)"), 
                                                          title="Please select an input SNP File",
                                                          multiple=FALSE),
                                         br(),
                                         hr(),
                                         br(),
                                         p("SNP File:  ", style="text-align: left;"),
-                                        verbatimTextOutput("outSNPFile"))),
-                    column(4, wellPanel (textInput("textSNPInclude", label=p("SNPs to include:")),
-                                         textInput("textSNPExclude", label=p("SNPs to exclude:"))))
+                                        verbatimTextOutput("outSNPFileUsr"))),
+                    column(4, wellPanel (textInput("textSNPIncludeUsr", label=p("SNPs to include:")),
+                                         textInput("textSNPExcludeUsr", label=p("SNPs to exclude:"))))
                 ),
                 br(),
                 hr(),
@@ -167,16 +185,26 @@ whose daughters were all beautiful, but the youngest was so beautiful
                 br(),
                 br(),
                 fluidRow(
-                    column(4, wellPanel(radioButtons("radioOutputFormat",
+                    column(4, wellPanel(radioButtons("radioOutputFormatUsr",
                                                      label = NULL,
                                                      choices = list("Haploview" = 1, "Pairwise LD" = 2, "Find Proxy SNP" = 3)),
                                         hr(),
-                                        textInput("textOutputFile", label=p("Output File:")))),
-                    column(4, textInput("textProxyWindow", label=p("Window Size"))),
-                    column(4, sliderInput("sliderProxySNPs", 
+                                        textInput("textOutputFileUsr", label=p("Output File: (without file extension eg. MyOutputFile)")))),
+                    column(4, textInput("textProxyWindowUsr", label=p("Window Size"))),
+                    column(4, sliderInput("sliderProxySNPUsr", 
                                           label=p("Include LD greater than:"),
                                           min = 0, max = 1, value = 0.8))
-                )
+                ),
+                br(),
+                br(),
+                hr(),
+                br(),
+                fluidRow(
+                    column(4, actionButton("actionBtnUsr", "Calculate LD")),
+                    column(8, wellPanel(verbatimTextOutput("outputGLOBALOPTIONSUsr")))
+                ),
+                br(),
+                br()
             )
         )
       
