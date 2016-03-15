@@ -24,6 +24,114 @@ shinyUI(
             p("Put instructions here...", style="color: #2c3e50;"),
             br(),
             
+            #### Home, main configuration
+            conditionalPanel(
+                condition = "input.conditionedPanels == 1",
+                
+                fluidRow(
+                    column(
+                        5, 
+                        br(),
+                        p("Chromosome:", style="font-weight: bold; color: #2c3e50; padding-top: 6px; float: right;")),
+                    column(
+                        7,
+                        textInput("txtChr", "", value = "",
+                                  placeholder = "example: 5")
+                    )
+                ),
+                fluidRow(
+                    column(
+                        5, br(),
+                        p("Start:", style="font-weight: bold; color: #2c3e50; padding-top: 6px; float: right;")
+                    ),
+                    column(
+                        7,
+                        textInput("txtStart", "", value = "",
+                                  placeholder = "example: 10000")
+                    )
+                ),
+                fluidRow(
+                    column(
+                        5, br(),
+                        p("End:", style="font-weight: bold; color: #2c3e50; padding-top: 6px; float: right;")
+                    ),
+                    column(
+                        7,
+                        textInput("txtEnd", "", value="",
+                                  placeholder = "example: 15000")
+                    )
+                ),
+                hr(),
+                br(),
+                # ---- Population Controls ----
+                selectizeInput("inPop",
+                               "Select population: ",
+                               choices = list("GBR", "CEU", "FIN", "IBS", "TSI"),
+                               multiple = TRUE
+                )
+            ),
+            
+            #### LD Zooms (proxies)
+            conditionalPanel(
+                condition = "input.conditionedPanels == 2",
+                
+                # ---- CHR, START, END controls ---- 
+                fluidRow(
+                    column(
+                        5, 
+                        br(),
+                        p("Chromosome:", style="font-weight: bold; color: #2c3e50; padding-top: 6px; float: right;")),
+                    column(
+                        7,
+                        textInput("txtChr", "", value = "",
+                                  placeholder = "example: 5")
+                    )
+                ),
+                fluidRow(
+                    column(
+                        5, br(),
+                        p("Start:", style="font-weight: bold; color: #2c3e50; padding-top: 6px; float: right;")
+                    ),
+                    column(
+                        7,
+                        textInput("txtStart", "", value = "",
+                                  placeholder = "example: 10000")
+                    )
+                ),
+                fluidRow(
+                    column(
+                        5, br(),
+                        p("End:", style="font-weight: bold; color: #2c3e50; padding-top: 6px; float: right;")
+                    ),
+                    column(
+                        7,
+                        textInput("txtEnd", "", value="",
+                                  placeholder = "example: 15000")
+                    )
+                ),
+                hr(),
+                br(),
+                
+                # ---- SNP controls (targeted snp) ----
+                fluidRow(
+                    column(
+                        4, br(), 
+                        p("SNP:", style="font-weight: bold; color: #2c3e50; padding-top: 6px; float: right;")
+                    ),
+                    column(
+                        8,
+                        textInput("txtSNP", "", value="",
+                                  placeholder = "example: rs67808744")
+                    )
+                ),
+                hr(),
+                br(),
+                actionButton("btnGetLD",
+                             label = p("Calculate LD", style="color: #ecf0f1; font-size: 15px;"),
+                             style = "text-align: center; height: 35px; margin: auto; background-color: #3498db; float: right;")
+            ),
+            
+            #### LD Heatmaps
             conditionalPanel(
                 condition = "input.conditionedPanels == 3",
                 fluidRow(
@@ -72,10 +180,12 @@ shinyUI(
         mainPanel(
             tabsetPanel(
                 tabPanel(
-                    h4("Home")
+                    h4("Home"),
+                    value = 1
                 ),
                 tabPanel(
-                    h4("LD Zooms")
+                    h4("LD Zooms"),
+                    value = 2
                 ),
                 tabPanel(
                     h4("LD Proximity"),
