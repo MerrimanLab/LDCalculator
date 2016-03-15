@@ -5,9 +5,30 @@
 # Nick Burns
 # March, 2016
 
-ldSamples <- function (populations, allPops = FALSE, incr = 1, first = TRUE) {
+ldSamples <- function (populations, n = 1, allPops = FALSE, first = TRUE) {
     
-    if (incr == 0) {
+    # Recursively extracts sample IDs from the 1000 Genomes panel file, 
+    # according to population.
+    #
+    # Parameters:
+    # -----------
+    #    populations: list
+    #        user selected list (input$inPop)
+    #    n: int
+    #        incrementor / decrementor for recursion
+    #    allPops: TRUE / FALSE
+    #        flag for special case of all populations
+    #    first: TRUE / FALSE
+    #        flag for first population group, which results in
+    #        overwriting sample_list.txt. All subsequent calls
+    #        append to sample_list.txt.
+    #
+    # Returns:
+    # --------
+    #    Outputs sample_list.txt
+    
+    # recursive base-case
+    if (n == 0) {
         return ()
     }
     outputFile <- "sample_list.txt"
@@ -21,11 +42,11 @@ ldSamples <- function (populations, allPops = FALSE, incr = 1, first = TRUE) {
         pipeout <- ifelse (first == TRUE, ">", ">>")
         command <- sprintf("./GetSampleIDs.sh %s %s %s",
                            populations[incr], pipeout, outputFile)
-        decr <- incr - 1
+        decr <- n - 1
     }
     
     system(command)
-    return (ldSamples(populations, incr = decr, first = FALSE))
+    return (ldSamples(populations, n = decr, first = FALSE))
 }
 ldRead <- function (ldFile) {
     
