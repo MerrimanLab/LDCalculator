@@ -51,11 +51,18 @@ shinyServer(function(input, output) {
                             input$txtChr, input$txtStart, input$txtEnd)
         ldZoom(proxyFile)
     })
-    output$proxyTableSummary <- renderDataTable({
-        proxyFile <- sprintf("./Datasets/Genotype_%s_%s-%s_Proxy.ld",
-                             input$txtChr, input$txtStart, input$txtEnd)
-        proxyData <- ldRead(proxyFile)
-        
-        proxyData[order(proxyData$R2, decreasing = TRUE), ]
-    })
+    output$proxyTableSummary <- renderDataTable(
+        {
+            proxyFile <- sprintf("./Datasets/Genotype_%s_%s-%s_Proxy.ld",
+                                 input$txtChr, input$txtStart, input$txtEnd)
+            proxyData <- ldRead(proxyFile)
+            
+            columns <- c("CHR_A", "BP_A", "BP_B", "SNP_A", "SNP_B", "R2")
+            proxyData <- proxyData[, columns]
+            colnames(proxyData) <- c("Chr", "Pos(A)", "Pos(B)", "SNP(A)", "SNP(B)", "R2")
+            
+            proxyData[order(proxyData$R2, decreasing = TRUE), ]
+        }, 
+        options = list(pageLength = 10)
+    )
 })
