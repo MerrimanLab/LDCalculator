@@ -1,6 +1,6 @@
 PLINK v1.90b3.31 64-bit (3 Feb 2016)
 Options in effect:
-  --ld-snp rs11231874
+  --ld-snp rs12273305
   --ld-window 99999
   --ld-window-kb 1000
   --out ./Datasets/Genotype_11_64500000-64600000_Proxy
@@ -9,9 +9,9 @@ Options in effect:
 
 Hostname: Odin
 Working directory: /home/nickb/Documents/GitHub/LDCalculator/LDExplorer
-Start time: Wed Mar 16 10:24:18 2016
+Start time: Wed Mar 16 10:31:34 2016
 
-Random number seed: 1458077058
+Random number seed: 1458077494
 15489 MB RAM detected; reserving 7744 MB for main workspace.
 --vcf: ./Datasets/Genotype_11_64500000-64600000_Proxy-temporary.bed +
 ./Datasets/Genotype_11_64500000-64600000_Proxy-temporary.bim +
@@ -28,4 +28,4 @@ Total genotyping rate is 0.999767.
 Note: No phenotypes present.
 --r2 to ./Datasets/Genotype_11_64500000-64600000_Proxy.ld ... done.
 
-End time: Wed Mar 16 10:24:18 2016
+End time: Wed Mar 16 10:31:35 2016

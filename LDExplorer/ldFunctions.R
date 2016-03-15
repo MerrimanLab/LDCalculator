@@ -80,3 +80,26 @@ ldZoom <- function (ldFile) {
     
     return (zoom)
 }
+
+ldProxyTable <- function (proxyFile) {
+    
+    # reads in LD data and returns an ordered summary
+    #
+    # Parameters:
+    # -----------
+    #    proxyFile: filename
+    #        LD output from PLINK, see ldProxy.sh
+    #
+    # Returns:
+    # --------
+    #    proxyData: data frame
+    #        (Chr, Pos(A), Pos(B), SNP(A), SNP(B), R2)
+    
+    proxyData <- ldRead(proxyFile)
+    
+    columns <- c("CHR_A", "BP_A", "BP_B", "SNP_A", "SNP_B", "R2")
+    proxyData <- proxyData[, columns]
+    colnames(proxyData) <- c("Chr", "Pos(A)", "Pos(B)", "SNP(A)", "SNP(B)", "R2")
+    
+    return (proxyData[order(proxyData$R2, decreasing = TRUE), ])
+}
