@@ -21,6 +21,15 @@ shinyServer(function(input, output) {
     # initialise data (calculate LD)
     initLD <- eventReactive(input$btnGetLD, {
         
+        # Create the list of sample IDs
+        ldPops <- input$inPop
+        if (ldPops[1] == "ALL") {
+            ldSamples(ldPops, allPops == TRUE)
+        } else {
+            ldSamples(ldPops, incr = length(ldPops))
+        }
+        
+        # Calculate LD for the given region
         #command <- sprintf("./GetLD.sh %s %s %s",
         #                   input$txtChr, input$txtStart, input$txtEnd)
         #system(command)

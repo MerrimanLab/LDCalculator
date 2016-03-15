@@ -5,6 +5,28 @@
 # Nick Burns
 # March, 2016
 
+ldSamples <- function (populations, allPops = FALSE, incr = 1, first = TRUE) {
+    
+    if (incr == 0) {
+        return ()
+    }
+    outputFile <- "sample_list.txt"
+    
+    if (allPops == TRUE) {
+        popfile = "/mnt/DataDrive/ReferenceData/1000Genomes_PopSample_Information.20130502.ALL.panel"
+        command <- sprintf("cut -f1 %s > %s", popfile, outputFile)
+        decr <- 0
+        
+    } else {
+        pipeout <- ifelse (first == TRUE, ">", ">>")
+        command <- sprintf("./GetSampleIDs.sh %s %s %s",
+                           populations[incr], pipeout, outputFile)
+        decr <- incr - 1
+    }
+    
+    system(command)
+    return (ldSamples(populations, incr = decr, first = FALSE))
+}
 ldRead <- function (ldFile) {
     
     # Reads in LD data into a data frame.
