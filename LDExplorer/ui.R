@@ -42,7 +42,7 @@ shinyUI(
                 column(
                     7,
                     textInput("txtStart", "", value = "",
-                              placeholder = "example: 1000000")
+                              placeholder = "example: 10000")
                 )
             ),
             fluidRow(
@@ -53,7 +53,7 @@ shinyUI(
                 column(
                     7,
                     textInput("txtEnd", "", value="",
-                              placeholder = "example: 1100000")
+                              placeholder = "example: 15000")
                 )
             ),
             hr(),
