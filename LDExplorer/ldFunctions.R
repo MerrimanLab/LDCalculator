@@ -5,6 +5,27 @@
 # Nick Burns
 # March, 2016
 
+ldRead <- function (ldFile) {
+    
+    # Reads in LD data into a data frame.
+    #
+    # Parameters:  
+    # -----------
+    #    ldFile: filename
+    #        LD output from PLINK2, (CHR_A, BP_A, SNP_A, CHR_B, BP_B, SNP_B, R2)
+    #        CHR_[A/B]: the chromosome on which the SNP is found
+    #        SNP_[A/B]: the rsIDs of the SNPs
+    #        BP_[A/B]: the position of the SNP (bases)
+    #        R2: LD metric.
+    #
+    # Output:
+    # -------
+    #    Data frame as above.
+    
+    ldData <- read.table(ldFile, header = TRUE)
+    return (ldData)
+}
+
 ldHeatmap <- function (ldFile) {
     
     # Reads in LD data, creates LD-based dissimilarity matrix, plots and clusters.
@@ -20,7 +41,7 @@ ldHeatmap <- function (ldFile) {
     #    Heatmap (including dendogram) of the data.
     
     # read in data, transform into NxN matrix of SNPs
-    data <- read.table(ldFile, header=TRUE)
+    data <- ldRead(ldFile)
     data <- reshape2::dcast(data[, c("SNP_A", "SNP_B", "R2")], SNP_A ~ SNP_B, value.var = "R2")
     
 
