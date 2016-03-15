@@ -1,6 +1,6 @@
 # LDExplorer ldFunctions.R
 #
-# Given an LD dataset, cluster the data and return a heatmap
+# Supporting functions to explore LD datasets.
 #
 # Nick Burns
 # March, 2016
@@ -74,7 +74,7 @@ ldZoom <- function (ldFile) {
         scale_colour_gradientn(colours=rainbow(3)) +
         xlab("Position (Mb)") +
         theme(legend.position = "none") + 
-        geom_text_repel(data = ldData[ldData$R2 > 0.9, ],
+        geom_text_repel(data = ldData[ldData$R2 > 0.95, ],
                         aes(x = BP_B / 1000000, y = R2, label = SNP_B), colour="grey10", size=3) +
         theme_bw()
     
@@ -97,6 +97,7 @@ ldProxyTable <- function (proxyFile) {
     
     proxyData <- ldRead(proxyFile)
     
+    # wrangle
     columns <- c("CHR_A", "BP_A", "BP_B", "SNP_A", "SNP_B", "R2")
     proxyData <- proxyData[, columns]
     colnames(proxyData) <- c("Chr", "Pos(A)", "Pos(B)", "SNP(A)", "SNP(B)", "R2")

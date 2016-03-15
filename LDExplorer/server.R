@@ -15,6 +15,7 @@ library(ggplot2)
 library(ggrepel)
 source("ldFunctions.R")
 
+
 shinyServer(function(input, output) {
     
     # initialise data (calculate LD)
@@ -38,8 +39,7 @@ shinyServer(function(input, output) {
             proxyFile <- sprintf("./Datasets/Genotype_%s_%s-%s_Proxy.ld",
                                  input$txtChr, input$txtStart, input$txtEnd)
             ldProxyTable(proxyFile)
-        }, 
-        options = list(pageLength = 10)
+        }, options = list(pageLength = 10)
         )
 
     })
