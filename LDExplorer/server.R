@@ -25,6 +25,8 @@ shinyServer(function(input, output) {
         #                   input$txtChr, input$txtStart, input$txtEnd)
         #system(command)
         print("Commented out for testing. Uncomment this function for live use.")
+        print("Selected populations are: ")
+        print(input$inPop)
     })
     initZoom <- eventReactive(input$btnLDZoom, {
         

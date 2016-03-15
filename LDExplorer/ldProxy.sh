@@ -7,4 +7,4 @@
 SNP=$1
 VCFFILE=$2
 
-~/GenomeTools/PLINK/plink --vcf ${VCFFILE} --r2 --ld-snp ${SNP} --ld-window-kb 1000 --ld-window 99999 --out ${VCFFILE%.vcf}_Proxy
+~/GenomeTools/PLINK/plink --vcf ${VCFFILE} --r2 --ld-snp ${SNP} --ld-window-kb 1000 --ld-window 99999 --ld-window-r2 0.05 --out ${VCFFILE%.vcf}_Proxy
