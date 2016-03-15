@@ -68,49 +68,18 @@ shinyUI(
                                "Select population: ",
                                choices = list("GBR", "CEU", "FIN", "IBS", "TSI"),
                                multiple = TRUE
-                )
+                ),
+                
+                hr(),
+                br(),
+                actionButton("btnGetLD",
+                             label = p("Calculate LD", style="color: #ecf0f1; font-size: 15px;"),
+                             style = "text-align: center; height: 35px; margin: auto; background-color: #3498db; float: right;")
             ),
             
             #### LD Zooms (proxies)
             conditionalPanel(
                 condition = "input.conditionedPanels == 2",
-                
-                # ---- CHR, START, END controls ---- 
-                fluidRow(
-                    column(
-                        5, 
-                        br(),
-                        p("Chromosome:", style="font-weight: bold; color: #2c3e50; padding-top: 6px; float: right;")),
-                    column(
-                        7,
-                        textInput("txtChr", "", value = "",
-                                  placeholder = "example: 5")
-                    )
-                ),
-                fluidRow(
-                    column(
-                        5, br(),
-                        p("Start:", style="font-weight: bold; color: #2c3e50; padding-top: 6px; float: right;")
-                    ),
-                    column(
-                        7,
-                        textInput("txtStart", "", value = "",
-                                  placeholder = "example: 10000")
-                    )
-                ),
-                fluidRow(
-                    column(
-                        5, br(),
-                        p("End:", style="font-weight: bold; color: #2c3e50; padding-top: 6px; float: right;")
-                    ),
-                    column(
-                        7,
-                        textInput("txtEnd", "", value="",
-                                  placeholder = "example: 15000")
-                    )
-                ),
-                hr(),
-                br(),
                 
                 # ---- SNP controls (targeted snp) ----
                 fluidRow(
@@ -126,8 +95,8 @@ shinyUI(
                 ),
                 hr(),
                 br(),
-                actionButton("btnGetLD",
-                             label = p("Calculate LD", style="color: #ecf0f1; font-size: 15px;"),
+                actionButton("btnLDZoom",
+                             label = p("Visualise LD", style="color: #ecf0f1; font-size: 15px;"),
                              style = "text-align: center; height: 35px; margin: auto; background-color: #3498db; float: right;")
             ),
             
@@ -166,12 +135,7 @@ shinyUI(
                         textInput("txtEnd", "", value="",
                                   placeholder = "example: 15000")
                     )
-                ),
-                hr(),
-                br(),
-                actionButton("btnGetLD",
-                             label = p("Calculate LD", style="color: #ecf0f1; font-size: 15px;"),
-                             style = "text-align: center; height: 35px; margin: auto; background-color: #3498db; float: right;")
+                )
             ),
             br(),
             br(),
@@ -184,7 +148,9 @@ shinyUI(
                     value = 1
                 ),
                 tabPanel(
-                    h4("LD Zooms"),
+                    h4("LD Zoom"),
+                    plotOutput("pltZoom"),
+                    dataTableOutput("proxyTableSummary"),
                     value = 2
                 ),
                 tabPanel(

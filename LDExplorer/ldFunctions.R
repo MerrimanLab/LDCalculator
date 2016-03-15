@@ -53,3 +53,30 @@ ldHeatmap <- function (ldFile) {
     return (heatmap(data))
 }
 
+ldZoom <- function (ldFile) {
+    
+    # Reads in LD data, creates an LDZoom centered about the target snp.
+    #
+    # Parameters:  
+    # -----------
+    #    ldFile: filename
+    #        LD output from PLINK2
+    #
+    # Output:
+    # -------
+    #    ldZoom:
+    #        plot of POS against R2, centered about the target SNP
+    
+    ldData <- ldRead(ldFile)
+    
+    zoom <- ggplot(ldData, aes(x = BP_B / 1000000, y = R2)) +
+        geom_point(aes(size = R2, colour = -R2), alpha = 0.8) +
+        scale_colour_gradientn(colours=rainbow(3)) +
+        xlab("Position (Mb)") +
+        theme(legend.position = "none") + 
+        geom_text_repel(data = ldData[ldData$R2 > 0.9, ],
+                        aes(x = BP_B / 1000000, y = R2, label = SNP_B), colour="grey10", size=3) +
+        theme_bw()
+    
+    return (zoom)
+}

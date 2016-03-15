@@ -11,6 +11,8 @@
 
 library(shiny)
 library(reshape2)
+library(ggplot2)
+library(ggrepel)
 source("ldFunctions.R")
 
 shinyServer(function(input, output) {
@@ -23,6 +25,16 @@ shinyServer(function(input, output) {
         #system(command)
         print("Commented out for testing. Uncomment this function for live use.")
     })
+    initZoom <- eventReactive(input$btnLDZoom, {
+        
+        ldSNP <- input$txtSNP
+        genotypeFile <- sprintf("./Datasets/Genotype_%s_%s-%s.vcf",
+                                input$txtChr, input$txtStart, input$txtEnd)
+        
+        command <- sprintf("./ldProxy.sh %s %s", ldSNP, genotypeFile)
+        system(command)
+
+    })
     
     output$pltHeatmap <- renderPlot({
         initLD()
@@ -31,5 +43,19 @@ shinyServer(function(input, output) {
         
         ldHeatmap(ldFile)
         
+    })
+    
+    output$pltZoom <- renderPlot({
+        initZoom()
+        proxyFile <- sprintf("./Datasets/Genotype_%s_%s-%s_Proxy.ld",
+                            input$txtChr, input$txtStart, input$txtEnd)
+        ldZoom(proxyFile)
+    })
+    output$proxyTableSummary <- renderDataTable({
+        proxyFile <- sprintf("./Datasets/Genotype_%s_%s-%s_Proxy.ld",
+                             input$txtChr, input$txtStart, input$txtEnd)
+        proxyData <- ldRead(proxyFile)
+        
+        proxyData[order(proxyData$R2, decreasing = TRUE), ]
     })
 })
