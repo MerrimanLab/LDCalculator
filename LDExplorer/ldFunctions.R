@@ -41,7 +41,7 @@ ldSamples <- function (populations, n = 1, allPops = FALSE, first = TRUE) {
     } else {
         pipeout <- ifelse (first == TRUE, ">", ">>")
         command <- sprintf("./GetSampleIDs.sh %s %s %s",
-                           populations[incr], pipeout, outputFile)
+                           populations[n], pipeout, outputFile)
         decr <- n - 1
     }
     
@@ -93,7 +93,37 @@ ldHeatmap <- function (ldFile) {
     data[is.na(data)] <- 0          # set missing LD values as minimum LD
     data <- 1 - data                # create dissimilarity measure
     
-    return (heatmap(data))
+    colourPalette <- RColorBrewer::brewer.pal(5, "Greys")[5:1]
+    return (heatmap(data, col=colourPalette))
+}
+
+ldDendrogram <- function (ldFile, title) {
+    
+    # Reads in LD data, creates LD-based dissimilarity matrix, plots and clusters.
+    #
+    # Parameters:  
+    # -----------
+    #    ldFile: filename
+    #        LD output from PLINK2, requires the following columns:
+    #        (SNP_A, SNP_B, R2) where R2 is the LD (R^2) between SNPs A and B.
+    #
+    # Output:
+    # -------
+    #    Heatmap (including dendogram) of the data.
+    
+    # read in data, transform into NxN matrix of SNPs
+    data <- ldRead(ldFile)
+    data <- reshape2::dcast(data[, c("SNP_A", "SNP_B", "R2")], SNP_A ~ SNP_B, value.var = "R2")
+    
+    
+    rownames(data) <- data[, 1]     # wrangle the data into a dissimilarity matrix
+    data <- as.matrix(data[, -1])   # --------------------------------------------
+    data[is.na(data)] <- 0          # set missing LD values as minimum LD
+    data <- 1 - data                # create dissimilarity measure
+    
+    fit <- pvclust(data, method.hclust = "ward", quiet=TRUE)
+    
+    return (plot(fit, main=title, cex=0.75))
 }
 
 ldZoom <- function (ldFile) {
@@ -117,7 +147,7 @@ ldZoom <- function (ldFile) {
         scale_colour_gradientn(colours=rainbow(3)) +
         xlab("Position (Mb)") +
         theme(legend.position = "none") + 
-        geom_text_repel(data = ldData[ldData$R2 > 0.95, ],
+        geom_text_repel(data = ldData[ldData$R2 > 0.90, ],
                         aes(x = BP_B / 1000000, y = R2, label = SNP_B), colour="grey10", size=3) +
         theme_bw()
     

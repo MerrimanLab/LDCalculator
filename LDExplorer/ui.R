@@ -71,7 +71,7 @@ shinyUI(
                 br(),
                 # ---- Population Controls ----
                 selectizeInput("inPop",
-                               "Select population: ",
+                               p("Select population: ",  style="color: #2c3e50;"),
                                choices = POPLIST,
                                multiple = TRUE
                 ),
@@ -192,62 +192,74 @@ shinyUI(
                     p("You can use the LD Explorer to interactive explore one chromosome region at a time.
                       To get started, enter the Chromosome number, start position and end position in the
                       control bar to the left. Then, select the populations of interest. Note, that you
-                      can select multiple populations at once."),
+                      can select multiple populations at once.", 
+                      style="color: #2c3e50;"),
                     br(),
-                    p("The populations are arranged as follows:"),
+                    p("The populations are arranged as follows:", 
+                      style="color: #2c3e50;"),
                     fluidRow(
                         column(4, p("ALL", style="color: #2c3e50; font-weight: bold; text-decoration: underline;")),
                         column(4, p("(AFR) African", 
                                     style="color: #2c3e50; font-weight: bold; text-decoration: underline;"),
-                               tags$ul(
-                                   tags$li("(YRI) Yoruba in Ibadan, Nigera"),
-                                   tags$li("(LWK) Luhya in Webuye, Kenya"),
-                                   tags$li("(GWD) Gambian in Western Gambia"),
-                                   tags$li("(MSL) Mende in Sierra Leone"),
-                                   tags$li("(ESN) Esan in Nigeria"),
-                                   tags$li("(ASW) Americans of African Ancestry in SW USA"),
-                                   tags$li("(ACB) African Carribbeans in Barbados")
+                               div(
+                                   tags$ul(
+                                       tags$li("(YRI) Yoruba in Ibadan, Nigera"),
+                                       tags$li("(LWK) Luhya in Webuye, Kenya"),
+                                       tags$li("(GWD) Gambian in Western Gambia"),
+                                       tags$li("(MSL) Mende in Sierra Leone"),
+                                       tags$li("(ESN) Esan in Nigeria"),
+                                       tags$li("(ASW) Americans of African Ancestry in SW USA"),
+                                       tags$li("(ACB) African Carribbeans in Barbados")
+                                   ),  style="color: #2c3e50;"
                                )
                         ),
                         column(4, p("(AMR) Ad Mixed American", 
                                     style="color: #2c3e50; font-weight: bold; text-decoration: underline;"),
-                               tags$ul(
-                                   tags$li("(MXL) Mexican Ancestry from Los Angeles, USA"),
-                                   tags$li("(PUR) Puerto Ricans from Puerto Rico"),
-                                   tags$li("(CLM) Columbians from Medellin, Colombia"),
-                                   tags$li("(PEL) Peruvians from Lima, Peru")
+                               div(
+                                   tags$ul(
+                                       tags$li("(MXL) Mexican Ancestry from Los Angeles, USA"),
+                                       tags$li("(PUR) Puerto Ricans from Puerto Rico"),
+                                       tags$li("(CLM) Columbians from Medellin, Colombia"),
+                                       tags$li("(PEL) Peruvians from Lima, Peru")
+                                   ),  style="color: #2c3e50;"
                                )
                         )
                     ),
                     fluidRow(
                         column(4, p("(EUR) European", 
                                     style="color: #2c3e50; font-weight: bold; text-decoration: underline;"),
-                               tags$ul(
-                                   tags$li("(CEU) Utah residents from North and West Europe"),
-                                   tags$li("(TSI) Toscani in Italia"),
-                                   tags$li("(FIN) Finnish in Finland"),
-                                   tags$li("(GBR) British in England and Scotland"),
-                                   tags$li("(IBS) Iberian population in Spain")
+                               div(
+                                   tags$ul(
+                                       tags$li("(CEU) Utah residents from North and West Europe"),
+                                       tags$li("(TSI) Toscani in Italia"),
+                                       tags$li("(FIN) Finnish in Finland"),
+                                       tags$li("(GBR) British in England and Scotland"),
+                                       tags$li("(IBS) Iberian population in Spain")
+                                   ),  style="color: #2c3e50;"
                                )
                         ),
                         column(4, p("(EAS) East Asian", 
                                     style="color: #2c3e50; font-weight: bold; text-decoration: underline;"),
-                               tags$ul(
-                                   tags$li("(CHB) Han chinese in Bejing, China"),
-                                   tags$li("(JPT) Japanese in Tokyo, Japan"),
-                                   tags$li("(CHS) Southern Han Chinese"),
-                                   tags$li("(CDX) Chinese Dai in Xishuangbanna, China"),
-                                   tags$li("(KHV) Kinh in Ho Chu Minh City, Vietnam")
+                               div(
+                                   tags$ul(
+                                       tags$li("(CHB) Han chinese in Bejing, China"),
+                                       tags$li("(JPT) Japanese in Tokyo, Japan"),
+                                       tags$li("(CHS) Southern Han Chinese"),
+                                       tags$li("(CDX) Chinese Dai in Xishuangbanna, China"),
+                                       tags$li("(KHV) Kinh in Ho Chu Minh City, Vietnam")
+                                   ),  style="color: #2c3e50;"
                                )
                         ),
                         column(4, p("(SAS) South Asian", 
                                     style="color: #2c3e50; font-weight: bold; text-decoration: underline;"),
-                               tags$ul(
-                                   tags$li("(GIH) Gujarati Indian from Houston, Texas"),
-                                   tags$li("(PJL) Punjabi from Lahore, Pakistan"),
-                                   tags$li("(BEB) Bengali from Bangladesh"),
-                                   tags$li("(STU) Sri Lankan Tamil from the UK"),
-                                   tags$li("(ITU) Indian Telugu from the UK")
+                               div(
+                                   tags$ul(
+                                       tags$li("(GIH) Gujarati Indian from Houston, Texas"),
+                                       tags$li("(PJL) Punjabi from Lahore, Pakistan"),
+                                       tags$li("(BEB) Bengali from Bangladesh"),
+                                       tags$li("(STU) Sri Lankan Tamil from the UK"),
+                                       tags$li("(ITU) Indian Telugu from the UK")
+                                   ),  style="color: #2c3e50;"
                                )
                         ),
                         column(4)
@@ -257,12 +269,21 @@ shinyUI(
                 tabPanel(
                     h4("LD Zoom"),
                     plotOutput("pltZoom"),
+                    br(),
+                    br(),
+                    h3("Proxy Variant Summary",  style="color: #2c3e50;"),
+                    br(),
                     dataTableOutput("proxyTableSummary"),
                     value = 2
                 ),
                 tabPanel(
                     h4("LD Proximity"),
-                    plotOutput("pltHeatmap"),
+                    br(),
+                    br(),
+                    fluidRow(
+                        column(6, plotOutput("pltHeatmap")),
+                        column(6, plotOutput("pltDendrogram"))
+                    ),
                     value = 3
                 ),
                 tabPanel(

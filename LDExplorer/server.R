@@ -13,6 +13,9 @@ library(shiny)
 library(reshape2)
 library(ggplot2)
 library(ggrepel)
+library(RColorBrewer)
+library(scales)
+library(pvclust)
 source("ldFunctions.R")
 
 
@@ -26,7 +29,7 @@ shinyServer(function(input, output) {
         if (ldPops[1] == "ALL") {
             ldSamples(ldPops, allPops == TRUE)
         } else {
-            ldSamples(ldPops, incr = length(ldPops))
+            ldSamples(ldPops, n = length(ldPops))
         }
         
         # Calculate LD for the given region
@@ -36,6 +39,7 @@ shinyServer(function(input, output) {
         print("Commented out for testing. Uncomment this function for live use.")
         print("Selected populations are: ")
         print(input$inPop)
+        
     })
     initZoom <- eventReactive(input$btnLDZoom, {
         
@@ -63,6 +67,14 @@ shinyServer(function(input, output) {
         ldHeatmap(ldFile)
         
     })
+    output$pltDendrogram <- renderPlot({
+        ldFile <- sprintf("./Datasets/Genotype_%s_%s-%s.ld",
+                          input$txtChr, input$txtStart, input$txtEnd)
+        title <- sprintf("Cluster dendrogram: Chromosome %s: %s - %s",
+                         input$txtChr, input$txtStart, input$txtEnd)
+        
+        ldDendrogram(ldFile, title)
+    })
     
     output$pltZoom <- renderPlot({
         initZoom()
@@ -70,5 +82,6 @@ shinyServer(function(input, output) {
                             input$txtChr, input$txtStart, input$txtEnd)
         ldZoom(proxyFile)
     })
+    
     
 })
