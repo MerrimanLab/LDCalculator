@@ -128,7 +128,7 @@ ldDendrogram <- function (ldFile, title) {
     return (plot(fit, main=title, cex=0.75))
 }
 
-ldZoom <- function (ldFile) {
+ldZoom <- function (ldFile, ldThreshold) {
     
     # Reads in LD data, creates an LDZoom centered about the target snp.
     #
@@ -149,8 +149,13 @@ ldZoom <- function (ldFile) {
         scale_colour_gradientn(colours=rainbow(3)) +
         xlab("Position (Mb)") +
         theme(legend.position = "none") + 
-        geom_text_repel(data = ldData[ldData$R2 > 0.90, ],
+        geom_text_repel(data = ldData[ldData$R2 > ldThreshold, ],
                         aes(x = BP_B / 1000000, y = R2, label = SNP_B), colour="grey10", size=3) +
+        geom_hline(yintercept = ldThreshold, color="darkgray", linetype = "dashed") +
+        geom_vline(xintercept = min(ldData[ldData$R2 > ldThreshold, "BP_B"] / 1000000),
+                   color="darkgray", linetype = "dashed") +
+        geom_vline(xintercept = max(ldData[ldData$R2 > ldThreshold, "BP_B"] / 1000000),
+                   color="darkgray", linetype = "dashed") +
         theme_bw()
     
     return (zoom)

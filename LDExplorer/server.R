@@ -81,7 +81,7 @@ shinyServer(function(input, output) {
         initZoom()
         proxyFile <- sprintf("./Datasets/Genotype_%s_%s-%s_Proxy.ld",
                             input$txtChr, input$txtStart, input$txtEnd)
-        ldZoom(proxyFile)
+        ldZoom(proxyFile, input$ldEps)
     })
     
     

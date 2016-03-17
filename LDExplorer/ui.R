@@ -99,6 +99,10 @@ shinyUI(
                                   placeholder = "example: rs67808744")
                     )
                 ),
+                br(),
+                hr(),
+                sliderInput("ldEps", p("R2 threshold", style="font-weight: bold; color: #2c3e50; padding-top: 6px; float: right;"),
+                            min = 0, max = 1, value = 0.9, step = 0.1),
                 hr(),
                 br(),
                 actionButton("btnLDZoom",

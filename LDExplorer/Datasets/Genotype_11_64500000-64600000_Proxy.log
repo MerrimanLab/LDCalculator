@@ -10,9 +10,9 @@ Options in effect:
 
 Hostname: Odin
 Working directory: /home/nickb/Documents/GitHub/LDCalculator/LDExplorer
-Start time: Thu Mar 17 13:52:54 2016
+Start time: Thu Mar 17 15:53:53 2016
 
-Random number seed: 1458175974
+Random number seed: 1458183233
 15489 MB RAM detected; reserving 7744 MB for main workspace.
 --vcf: ./Datasets/Genotype_11_64500000-64600000_Proxy-temporary.bed +
 ./Datasets/Genotype_11_64500000-64600000_Proxy-temporary.bim +
@@ -29,4 +29,4 @@ Total genotyping rate is 0.999767.
 Note: No phenotypes present.
 --r2 to ./Datasets/Genotype_11_64500000-64600000_Proxy.ld ... done.
 
-End time: Thu Mar 17 13:52:54 2016
+End time: Thu Mar 17 15:53:53 2016
