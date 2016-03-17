@@ -85,16 +85,18 @@ ldHeatmap <- function (ldFile) {
     
     # read in data, transform into NxN matrix of SNPs
     data <- ldRead(ldFile)
-    data <- reshape2::dcast(data[, c("SNP_A", "SNP_B", "R2")], SNP_A ~ SNP_B, value.var = "R2")
+    snpOrder <- unique(data$SNP_B)  # chromosomal order, to be used to order heatmap columns
     
-
+    # reshape into NxN matrix and reorder columns according to snpOrder
+    data <- reshape2::dcast(data[, c("SNP_A", "SNP_B", "R2")], SNP_A ~ SNP_B, value.var = "R2")
     rownames(data) <- data[, 1]     # wrangle the data into a dissimilarity matrix
     data <- as.matrix(data[, -1])   # --------------------------------------------
     data[is.na(data)] <- 0          # set missing LD values as minimum LD
     data <- 1 - data                # create dissimilarity measure
+    data <- data[, snpOrder]        # reorder columns in chromosomal order
     
     colourPalette <- RColorBrewer::brewer.pal(5, "Greys")[5:1]
-    return (heatmap(data, col=colourPalette))
+    return (heatmap(data, col=colourPalette, Colv = 1:ncol(data)))
 }
 
 ldDendrogram <- function (ldFile, title) {

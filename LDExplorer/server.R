@@ -18,6 +18,8 @@ library(scales)
 library(pvclust)
 source("ldFunctions.R")
 
+# global variables
+delta <- 1000000
 
 shinyServer(function(input, output) {
     
@@ -68,6 +70,7 @@ shinyServer(function(input, output) {
         
     })
     output$pltDendrogram <- renderPlot({
+        
         ldFile <- sprintf("./Datasets/Genotype_%s_%s-%s.ld",
                           input$txtChr, input$txtStart, input$txtEnd)
         title <- sprintf("Cluster dendrogram: Chromosome %s: %s - %s",
