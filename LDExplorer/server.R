@@ -18,8 +18,6 @@ library(scales)
 library(pvclust)
 source("ldFunctions.R")
 
-# global variables
-delta <- 1000000
 
 shinyServer(function(input, output) {
     

@@ -286,9 +286,6 @@ shinyUI(
                     ),
                     value = 3
                 ),
-                tabPanel(
-                    h4("LD Pairs")
-                ),
                 id = "conditionedPanels"
             )
         )

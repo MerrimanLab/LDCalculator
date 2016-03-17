@@ -71,7 +71,7 @@ ldRead <- function (ldFile) {
 
 ldHeatmap <- function (ldFile) {
     
-    # Reads in LD data, creates LD-based dissimilarity matrix, plots and clusters.
+    # Reads in LD data, creates LD-based dissimilarity matrix, plots / clusters.
     #
     # Parameters:  
     # -----------
@@ -87,10 +87,10 @@ ldHeatmap <- function (ldFile) {
     data <- ldRead(ldFile)
     snpOrder <- unique(data$SNP_B)  # chromosomal order, to be used to order heatmap columns
     
-    # reshape into NxN matrix and reorder columns according to snpOrder
+    # wrangle the data into a dissimilarity matrix
     data <- reshape2::dcast(data[, c("SNP_A", "SNP_B", "R2")], SNP_A ~ SNP_B, value.var = "R2")
-    rownames(data) <- data[, 1]     # wrangle the data into a dissimilarity matrix
-    data <- as.matrix(data[, -1])   # --------------------------------------------
+    rownames(data) <- data[, 1]     
+    data <- as.matrix(data[, -1])   
     data[is.na(data)] <- 0          # set missing LD values as minimum LD
     data <- 1 - data                # create dissimilarity measure
     data <- data[, snpOrder]        # reorder columns in chromosomal order
