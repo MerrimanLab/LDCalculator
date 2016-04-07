@@ -10,50 +10,40 @@
 # March, 2016
 
 library(shiny)
-library(reshape2)
-library(ggplot2)
-library(ggrepel)
-library(RColorBrewer)
-library(scales)
-library(pvclust)
-source("ldFunctions.R")
-
+library(glida)
 
 shinyServer(function(input, output) {
     
     # initialise data (calculate LD)
     initLD <- eventReactive(input$btnGetLD, {
         
+        print("Initialising LD calculations. Please wait...")
         # Create the list of sample IDs
         ldPops <- input$inPop
         if (ldPops[1] == "ALL") {
-            ldSamples(ldPops, allPops == TRUE)
+            glida::ldPopulation(ldPops, allPops == TRUE)
         } else {
-            ldSamples(ldPops, n = length(ldPops))
+            glida::ldPopulation(ldPops, n = length(ldPops))
         }
         
         # Calculate LD for the given region
-        #command <- sprintf("./GetLD.sh %s %s %s",
-        #                   input$txtChr, input$txtStart, input$txtEnd)
-        #system(command)
-        print("Commented out for testing. Uncomment this function for live use.")
-        print("Selected populations are: ")
-        print(input$inPop)
+        glida::ldByRegion(input$txtChr, input$txtStart, input$txtEnd)
         
     })
     initZoom <- eventReactive(input$btnLDZoom, {
         
-        ldSNP <- input$txtSNP
-        genotypeFile <- sprintf("./Datasets/Genotype_%s_%s-%s.vcf",
+        leadSNP <- input$txtSNP
+        genotypeFile <- sprintf("Genotype_%s_%s-%s.vcf",
                                 input$txtChr, input$txtStart, input$txtEnd)
+        proxyFile <- sprintf("Genotype_%s_%s-%s_Proxy.ld",
+                             input$txtChr, input$txtStart, input$txtEnd)
         
-        command <- sprintf("./ldProxy.sh %s %s", ldSNP, genotypeFile)
-        system(command)
+        # Calculate LD relative to the leadSNP
+        glida::ldProxy(leadSNP, vcf = genotypeFile)
         
+        # print the summary table
         output$proxyTableSummary <- renderDataTable({
-            proxyFile <- sprintf("./Datasets/Genotype_%s_%s-%s_Proxy.ld",
-                                 input$txtChr, input$txtStart, input$txtEnd)
-            ldProxyTable(proxyFile)
+            glida::ldProxyTable(glida::ldRead(proxyFile))
         }, options = list(pageLength = 10)
         )
 
@@ -61,28 +51,44 @@ shinyServer(function(input, output) {
     
     output$pltHeatmap <- renderPlot({
         initLD()
-        ldFile <- sprintf("./Datasets/Genotype_%s_%s-%s.ld",
+        ldFile <- sprintf("Genotype_%s_%s-%s.ld",
                           input$txtChr, input$txtStart, input$txtEnd)
+        ldMatrix <- glida::ldDissimilarity(glida::ldRead(ldFile))
         
-        ldHeatmap(ldFile)
+        glida::ldHeatmap(ldMatrix)
         
     })
+    
     output$pltDendrogram <- renderPlot({
         
-        ldFile <- sprintf("./Datasets/Genotype_%s_%s-%s.ld",
+        ldFile <- sprintf("Genotype_%s_%s-%s.ld",
                           input$txtChr, input$txtStart, input$txtEnd)
         title <- sprintf("Cluster dendrogram: Chromosome %s: %s - %s",
                          input$txtChr, input$txtStart, input$txtEnd)
         
-        ldDendrogram(ldFile, title)
+        # Cluster the LD data
+        ldData <- glida::ldDissimilarity(glida::ldRead(ldFile))
+        ldClusters <- glida:::ldCluster(ldData)
+        
+        glida::ldDendrogram(ldClusters, plotTitle = title)
     })
     
     output$pltZoom <- renderPlot({
         initZoom()
-        proxyFile <- sprintf("./Datasets/Genotype_%s_%s-%s_Proxy.ld",
+        proxyFile <- sprintf("Genotype_%s_%s-%s_Proxy.ld",
                             input$txtChr, input$txtStart, input$txtEnd)
-        ldZoom(proxyFile, input$ldEps)
+        ldProxyData <- ldRead(proxyFile)
+        
+        # Query UCSC for nearby genes
+        genes <- glida::queryUCSC(fromUCSCEnsemblGenes(
+            chromosome = input$txtChr,
+            start = input$txtStart,
+            end = input$txtEnd
+        ))
+        
+        # plot and annotate
+        plotZoom <- glida::ldZoom(ldProxyData, ldThreshold = input$ldEps)
+        glida::geneAnnotation(plotZoom, genes = genes)
+        
     })
-    
-    
 })
